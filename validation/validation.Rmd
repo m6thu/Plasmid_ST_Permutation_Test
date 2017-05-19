@@ -7,7 +7,7 @@ output: html_document
 ### Start analysis, load dependencies and functions
 
 ```{r dependencies, message=FALSE}
-setwd('~/Plasmid_ST_Permutation_Test/validation')
+#setwd('~/Plasmid_ST_Permutation_Test/validation')
 
 library(plyr)
 library(dplyr)
@@ -24,188 +24,12 @@ source('../functions.R')
 ```
 
 ### Validation
-#### Random simulated data
-
-For randomized data, no positives should show up.
-
-```{r random sim, include=FALSE, cache=TRUE}
-genrandomdf(n_patients = 100, n_avgST = 5)
-r_p100_s5_plot <- plasmidSTpermute(r_p100_s5, 1e3)
-png("./sim_permute_results/r_p100_s5.png")
-print(r_p100_s5_plot)
-dev.off()
-
-genrandomdf(n_patients = 100, n_avgST = 10)
-r_p100_s10_plot <- plasmidSTpermute(r_p100_s10, 1e3)
-png("./sim_permute_results/r_p100_s10.png")
-print(r_p100_s10_plot)
-dev.off()
-
-genrandomdf(n_patients = 100, n_avgST = 100)
-r_p100_s100_plot <- plasmidSTpermute(r_p100_s100, 1e3)
-png("./sim_permute_results/r_p100_s100.png")
-print(r_p100_s100_plot)
-dev.off()
-
-genrandomdf(n_patients = 1000, n_avgST = 5)
-r_p1000_s5_plot <- plasmidSTpermute(r_p1000_s5, 1e3)
-png("./sim_permute_results/r_p1000_s5.png")
-print(r_p1000_s5_plot)
-dev.off()
-
-genrandomdf(n_patients = 1000, n_avgST = 10)
-r_p1000_s10_plot <- plasmidSTpermute(r_p100_s5, 1e3)
-png("./sim_permute_results/r_p1000_s10.png")
-print(r_p1000_s10_plot)
-dev.off()
-
-genrandomdf(n_patients = 1000, n_avgST = 100)
-r_p1000_s100_plot <- plasmidSTpermute(r_p1000_s100, 1e3)
-png("./sim_permute_results/r_p1000_s100.png")
-print(r_p1000_s100_plot)
-dev.off()
-```
-
-```{r print 1, include=FALSE}
-png("./sim_permute_results/r_p100_s5.png")
-print(r_p100_s5_plot)
-dev.off()
-
-png("./sim_permute_results/r_p100_s10.png")
-print(r_p100_s10_plot)
-dev.off()
-
-png("./sim_permute_results/r_p100_s100.png")
-print(r_p100_s100_plot)
-dev.off()
-
-png("./sim_permute_results/r_p1000_s5.png")
-print(r_p1000_s5_plot)
-dev.off()
-
-png("./sim_permute_results/r_p1000_s10.png")
-print(r_p1000_s10_plot)
-dev.off()
-
-png("./sim_permute_results/r_p1000_s100.png")
-print(r_p1000_s100_plot)
-dev.off()
-```
-
- Average STs per patient | 5 | 10 | 100 |
------------|------------| ----------------| -------------- |
-Number of patients |
-100 | ![](./sim_permute_results/r_p100_s5.png) | ![](./sim_permute_results/r_p100_s10.png) | ![](./sim_permute_results/r_p100_s100.png) |
-1000 | ![](./sim_permute_results/r_p1000_s5.png) | ![](./sim_permute_results/r_p1000_s10.png) | ![](./sim_permute_results/r_p100_s100.png) |
-
 
 #### Check null hypothesis
 
 The null hypothesis is based on datasets generated given different probabilities of finding a plasmid in different STs. This is to look at possible artifacts when data is generated from a model with no relation between STs.
 
-```{r null hypo sim, include=FALSE, cache=TRUE}
-genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.9, 0.9, 0.9, 0.9, 0.9))
-n_p100c60_s5_all90_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.5, 0.5, 0.5, 0.5, 0.5))
-n_p100c60_s5_all50_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.1, 0.1, 0.1, 0.1, 0.1))
-n_p100c60_s5_all10_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.1, 0.2, 0.3, 0.4, 0.5))
-n_p100c60_s5_1020304050_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
-```
-
-```{r null hypo sim 1, include=FALSE, cache=TRUE}
-genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.7, 0.7, 0.7, 0.7, 0.7))
-n_p100c60_s5_all70_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.3, 0.3, 0.3, 0.3, 0.3))
-n_p100c60_s5_all30_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
-```
-
-```{r null hypo sim 2, include=FALSE, cache=TRUE}
-genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.9, 0.9, 0.9, 0.9, 0.9))
-n_p100c100_s5_all90_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.7, 0.7, 0.7, 0.7, 0.7))
-n_p100c100_s5_all70_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.5, 0.5, 0.5, 0.5, 0.5))
-n_p100c100_s5_all50_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.3, 0.3, 0.3, 0.3, 0.3))
-n_p100c100_s5_all30_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
-
-genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.1, 0.1, 0.1, 0.1, 0.1))
-n_p100c100_s5_all10_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
-```
-
-```{r print 2, include=FALSE}
-#c60
-
-png("./sim_permute_results/n_p100c60_s5_1020304050.png")
-print(n_p100c60_s5_1020304050_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c60_s5_all90.png")
-print(n_p100c60_s5_all90_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c60_s5_all70.png")
-print(n_p100c60_s5_all70_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c60_s5_all50.png")
-print(n_p100c60_s5_all50_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c60_s5_all30.png")
-print(n_p100c60_s5_all30_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c60_s5_all10.png")
-print(n_p100c60_s5_all10_plot)
-dev.off()
-
-#c100
-
-png("./sim_permute_results/n_p100c100_s5_all90.png")
-print(n_p100c100_s5_all90_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c100_s5_all70.png")
-print(n_p100c100_s5_all70_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c100_s5_all50.png")
-print(n_p100c100_s5_all50_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c100_s5_all30.png")
-print(n_p100c100_s5_all30_plot)
-dev.off()
-
-png("./sim_permute_results/n_p100c100_s5_all10.png")
-print(n_p100c100_s5_all10_plot)
-dev.off()
-
-```
-
-Coverage | 60 | 100 |
----|---|---|
-Equal probabilities |
-10 | ![](./sim_permute_results/n_p100c60_s5_all10.png) | ![](./sim_permute_results/n_p100c100_s5_all10.png) | 
-30 | ![](./sim_permute_results/n_p100c60_s5_all30.png) | ![](./sim_permute_results/n_p100c100_s5_all30.png) | 
-50 | ![](./sim_permute_results/n_p100c60_s5_all50.png) | ![](./sim_permute_results/n_p100c100_s5_all50.png) | 
-70 | ![](./sim_permute_results/n_p100c60_s5_all70.png) | ![](./sim_permute_results/n_p100c100_s5_all70.png) | 
-90 | ![](./sim_permute_results/n_p100c60_s5_all90.png) | ![](./sim_permute_results/n_p100c100_s5_all90.png) | 
-Varied ST probabilities |
-10, 20, 30, 40, 50 | ![](./sim_permute_results/n_p100c60_s5_1020304050.png) | |
-
-
-```{r merge tables}
+```{r merge tables, include=FALSE}
 # FIA
 
 p_FIA_1 = read.table("FIA_1.txt", sep="\t")
@@ -223,13 +47,19 @@ p_FIA = rbind(p_FIA_1, p_FIA_2, p_FIA_3)
 #p_FIIK = rbind(p_FIIK_1, p_FIIK_2, p_FIIK_3)
 ```
 
-```{r proportions}
+```{r proportions, include=FALSE}
 a <- hist(p_FIA$x, breaks = 100)
 b <- cumsum(a$counts)
+png("./proportion.png")
+par(pty="s")
 plot(a$mids, b, type='l')
 abline(a = 0, b = 1050, col="red")
+dev.off()
 ```
 
+![Raw p-value distribution]()
+
+![](./proportion.png)
 
 #### Effect of sample number per patient
 
