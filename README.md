@@ -5,7 +5,7 @@
 * [Data Structure](#data_structure) - _data structure expected to use the functions given for this test_
 * [Files & Functions](#files_functions) - _description of each files in repository and collection of comments from each function_
 * [Workflow](#workflow) - _how the functions and data structures fit together_
-* [Validation](#validation) - _proof that this test can be used_
+* [Validation](#validation) - _proof that this test can be trusted_
 * [Example Scripts](#example_scripts) - _basic example of usage_
 
 ### Dependencies <a name ="dependencies"></a>
@@ -32,16 +32,24 @@ or
 
 ### Method <a name ="method"></a>
 
-This section describes the algorithm used to perform this permutation test in diagrams.
+What it does is, it looks for the likelihood of finding the same plasmid in different STs within the same patient. Potential horizontal transfer is defined as the likelihood of finding the same plasmid across other STs in the same patient. To quantify this, scoring for each patient and sample population is defined as such:
 
 <center><img src="./images/horizontal_method_table_minus1.png" width="600"></center>
 
+Each patient has some amount of STs, and multiple samples of each ST. Consider 1 to mean, in that sample the plasmid we are looking for is found, and 0 to mean not found. This can be used to consider phenotypes in the same way, 1 if phenotype is present, 0 if not. Because we only care whether an ST ever has the plasmid at any point in time or not, STs are OR across samples. 
+ 
+A patient score is then calculated for each patient by simply finding the average of the result OR across samples minus 1 to both nominator and denominator. This gives us a score on the range of 0-1, where 0 means no plasmid is present in the patient in any ST, and 1 means the patient has the plasmid in question in all STs found in the patient.
+ 
+A group score used to compare between the actual data and distribution of shuffled STs (n = 10,000) is calculated by finding the average score among only patients that have a patient score > 0 (has the plasmid at least once in some ST at some time). 
+ 
+Permutation shuffling is done by only shuffling samples in their own ST as in the picture.
+
 <center><img src="./images/constrained_ST_shuffle.png" width="600"></center>
 
-What it does is, it looks for the likelihood of finding the same plasmid in different STs within the same patient.
+P-value obtained from one-tailed test.
 
-
-### Data Structure <a name ="data_structure"></a>
+<a name ="data_structure"></a>
+### Data Structure 
 
 [data structure w/ context]
 
@@ -49,15 +57,15 @@ What it does is, it looks for the likelihood of finding the same plasmid in diff
 
 [generated data structures]
 
-
-### Workflow <a name ="workflow"></a>
+<a name ="workflow"></a>
+### Workflow 
 
 This section shows how each functions are meant to be used together in a workflow.
 
 [Workflow]
 
-
-### Files & Functions <a name ="files_functions"></a>
+<a name ="files_functions"></a>
+### Files & Functions 
 
 This functions contains descriptions for each file and function. These descriptions can also be found with each function source comment.
 
@@ -71,8 +79,9 @@ validation.Rmd
 
 ### Validation <a name ="validation"></a>
 
-This section goes over why we can trust this test.
+The `validation` folder contains the entire body of work and method .
 
+???? What to call the p-value distribution thing???
 
 
 ### Example Scripts <a name ="example_scripts"></a>
