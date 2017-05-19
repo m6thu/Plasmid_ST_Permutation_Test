@@ -1,4 +1,4 @@
-###Index
+### Index of Contents
 
 * [Dependencies](#dependencies) - _r packages required and versioning_
 * [Method](#method) - _algorithm used to perform this permutation test in diagrams_
@@ -9,7 +9,6 @@
 * [Example Scripts](#example_scripts) - _basic example of usage_
 
 ### Dependencies <a name ="dependencies"></a>
-(check if true dependency)
 
 Newer versions might work also, but these are timestop versions (as is when this test was created).
 

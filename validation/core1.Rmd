@@ -1,0 +1,58 @@
+---
+title: "Validate permutation test"
+author: "Mathupanee Oonsivilai"
+date: "5/5/2017"
+output: html_document
+---
+
+```{r functions, echo=FALSE}
+source('p_functions.R')
+```
+
+
+```{r init, include=FALSE, cache=TRUE}
+p_value_iter = 350
+```
+
+```{r FIA, include=FALSE, cache=TRUE}
+# Hardcoded statistics from real data to be used for generating null case
+FIA_st = c("1", "11", "15", "1504", "16", "17", "20", "22", "234","25", "252","268",
+           "283","29", "307","334", "36", "409","414","477","656","70", "76", "NF")
+FIA_prob = c(0.0000000, 0.0000000, 0.3333333, 1.0000000, 0.0000000, 0.0000000, 0.0000000, 0.3000000, 0.5000000,
+             0.0000000, 0.6666667, 0.0000000, 0.0000000, 0.2000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000,
+             0.2857143, 0.0000000, 0.5000000, 0.0000000, 0.0000000, 0.1304348)
+
+# Start sampling p-values
+Sys.time()
+p_FIA <- vector(length = p_value_iter)
+for(i in 1:p_value_iter){
+    genNULLdf(n_patients = 100, percent = 100, n_avgST = length(FIA_st), ST_probs = FIA_prob)
+    p_FIA[i] <- plasmidSTpermute(n_p100c100_s24, permute_iter)
+}
+
+Sys.time()
+write.table(p_FIA, "FIA_1.txt", sep="\t")
+```
+
+```{r FIIK, include=FALSE, cache=TRUE}
+# Avoid variable collision
+rm("n_p100c100_s24")
+
+# Hardcoded statistics from real data to be used for generating null case
+FIIK_st = c("1", "11", "15", "1504", "16", "17", "20", "22", "234","25", "252", "268",
+           "283","29", "307","334", "36", "409","414","477","656","70", "76", "NF")
+FIIK_prob = c(1.0000000,1.0000000,0.5555556,0.5000000,0.5000000,1.0000000,1.0000000,0.7000000,0.5000000,0.0000000,
+             1.0000000,1.0000000,0.5000000,0.6000000,0.0000000,0.6666667,0.0000000,0.5000000,0.4285714,1.0000000,
+             0.5000000,0.0000000,0.0000000,0.6521739)
+
+# Start sampling p-values
+Sys.time()
+p_FIIK <- vector(length = p_value_iter)
+for(i in 1:p_value_iter){
+    genNULLdf(n_patients = 100, percent = 100, n_avgST = length(FIIK_st), ST_probs = FIIK_prob)
+    p_FIIK[i] <- plasmidSTpermute(n_p100c100_s24, permute_iter)
+}
+
+Sys.time()
+write.table(p_FIA, "FIIK_1.txt", sep="\t")
+```

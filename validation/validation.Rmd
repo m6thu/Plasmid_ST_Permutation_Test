@@ -1,0 +1,826 @@
+---
+title: "Validation"
+date: "4/27/2017"
+output: html_document
+---
+
+### Start analysis, load dependencies and functions
+
+```{r dependencies, message=FALSE}
+setwd('~/Plasmid_ST_Permutation_Test/validation')
+
+library(plyr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+```{r init, echo = FALSE}
+permute_iter = 1e4
+```
+
+```{r functions, echo=FALSE}
+source('../functions.R')
+```
+
+### Validation
+#### Random simulated data
+
+For randomized data, no positives should show up.
+
+```{r random sim, include=FALSE, cache=TRUE}
+genrandomdf(n_patients = 100, n_avgST = 5)
+r_p100_s5_plot <- plasmidSTpermute(r_p100_s5, 1e3)
+png("./sim_permute_results/r_p100_s5.png")
+print(r_p100_s5_plot)
+dev.off()
+
+genrandomdf(n_patients = 100, n_avgST = 10)
+r_p100_s10_plot <- plasmidSTpermute(r_p100_s10, 1e3)
+png("./sim_permute_results/r_p100_s10.png")
+print(r_p100_s10_plot)
+dev.off()
+
+genrandomdf(n_patients = 100, n_avgST = 100)
+r_p100_s100_plot <- plasmidSTpermute(r_p100_s100, 1e3)
+png("./sim_permute_results/r_p100_s100.png")
+print(r_p100_s100_plot)
+dev.off()
+
+genrandomdf(n_patients = 1000, n_avgST = 5)
+r_p1000_s5_plot <- plasmidSTpermute(r_p1000_s5, 1e3)
+png("./sim_permute_results/r_p1000_s5.png")
+print(r_p1000_s5_plot)
+dev.off()
+
+genrandomdf(n_patients = 1000, n_avgST = 10)
+r_p1000_s10_plot <- plasmidSTpermute(r_p100_s5, 1e3)
+png("./sim_permute_results/r_p1000_s10.png")
+print(r_p1000_s10_plot)
+dev.off()
+
+genrandomdf(n_patients = 1000, n_avgST = 100)
+r_p1000_s100_plot <- plasmidSTpermute(r_p1000_s100, 1e3)
+png("./sim_permute_results/r_p1000_s100.png")
+print(r_p1000_s100_plot)
+dev.off()
+```
+
+```{r print 1, include=FALSE}
+png("./sim_permute_results/r_p100_s5.png")
+print(r_p100_s5_plot)
+dev.off()
+
+png("./sim_permute_results/r_p100_s10.png")
+print(r_p100_s10_plot)
+dev.off()
+
+png("./sim_permute_results/r_p100_s100.png")
+print(r_p100_s100_plot)
+dev.off()
+
+png("./sim_permute_results/r_p1000_s5.png")
+print(r_p1000_s5_plot)
+dev.off()
+
+png("./sim_permute_results/r_p1000_s10.png")
+print(r_p1000_s10_plot)
+dev.off()
+
+png("./sim_permute_results/r_p1000_s100.png")
+print(r_p1000_s100_plot)
+dev.off()
+```
+
+ Average STs per patient | 5 | 10 | 100 |
+-----------|------------| ----------------| -------------- |
+Number of patients |
+100 | ![](./sim_permute_results/r_p100_s5.png) | ![](./sim_permute_results/r_p100_s10.png) | ![](./sim_permute_results/r_p100_s100.png) |
+1000 | ![](./sim_permute_results/r_p1000_s5.png) | ![](./sim_permute_results/r_p1000_s10.png) | ![](./sim_permute_results/r_p100_s100.png) |
+
+
+#### Check null hypothesis
+
+The null hypothesis is based on datasets generated given different probabilities of finding a plasmid in different STs. This is to look at possible artifacts when data is generated from a model with no relation between STs.
+
+```{r null hypo sim, include=FALSE, cache=TRUE}
+genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.9, 0.9, 0.9, 0.9, 0.9))
+n_p100c60_s5_all90_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.5, 0.5, 0.5, 0.5, 0.5))
+n_p100c60_s5_all50_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.1, 0.1, 0.1, 0.1, 0.1))
+n_p100c60_s5_all10_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.1, 0.2, 0.3, 0.4, 0.5))
+n_p100c60_s5_1020304050_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
+```
+
+```{r null hypo sim 1, include=FALSE, cache=TRUE}
+genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.7, 0.7, 0.7, 0.7, 0.7))
+n_p100c60_s5_all70_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 60, n_avgST = 5, ST_probs = c(0.3, 0.3, 0.3, 0.3, 0.3))
+n_p100c60_s5_all30_plot <- plasmidSTpermute(n_p100c60_s5, permute_iter)
+```
+
+```{r null hypo sim 2, include=FALSE, cache=TRUE}
+genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.9, 0.9, 0.9, 0.9, 0.9))
+n_p100c100_s5_all90_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.7, 0.7, 0.7, 0.7, 0.7))
+n_p100c100_s5_all70_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.5, 0.5, 0.5, 0.5, 0.5))
+n_p100c100_s5_all50_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.3, 0.3, 0.3, 0.3, 0.3))
+n_p100c100_s5_all30_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
+
+genNULLdf(n_patients = 100, percent = 100, n_avgST = 5, ST_probs = c(0.1, 0.1, 0.1, 0.1, 0.1))
+n_p100c100_s5_all10_plot <- plasmidSTpermute(n_p100c100_s5, permute_iter)
+```
+
+```{r print 2, include=FALSE}
+#c60
+
+png("./sim_permute_results/n_p100c60_s5_1020304050.png")
+print(n_p100c60_s5_1020304050_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c60_s5_all90.png")
+print(n_p100c60_s5_all90_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c60_s5_all70.png")
+print(n_p100c60_s5_all70_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c60_s5_all50.png")
+print(n_p100c60_s5_all50_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c60_s5_all30.png")
+print(n_p100c60_s5_all30_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c60_s5_all10.png")
+print(n_p100c60_s5_all10_plot)
+dev.off()
+
+#c100
+
+png("./sim_permute_results/n_p100c100_s5_all90.png")
+print(n_p100c100_s5_all90_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c100_s5_all70.png")
+print(n_p100c100_s5_all70_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c100_s5_all50.png")
+print(n_p100c100_s5_all50_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c100_s5_all30.png")
+print(n_p100c100_s5_all30_plot)
+dev.off()
+
+png("./sim_permute_results/n_p100c100_s5_all10.png")
+print(n_p100c100_s5_all10_plot)
+dev.off()
+
+```
+
+Coverage | 60 | 100 |
+---|---|---|
+Equal probabilities |
+10 | ![](./sim_permute_results/n_p100c60_s5_all10.png) | ![](./sim_permute_results/n_p100c100_s5_all10.png) | 
+30 | ![](./sim_permute_results/n_p100c60_s5_all30.png) | ![](./sim_permute_results/n_p100c100_s5_all30.png) | 
+50 | ![](./sim_permute_results/n_p100c60_s5_all50.png) | ![](./sim_permute_results/n_p100c100_s5_all50.png) | 
+70 | ![](./sim_permute_results/n_p100c60_s5_all70.png) | ![](./sim_permute_results/n_p100c100_s5_all70.png) | 
+90 | ![](./sim_permute_results/n_p100c60_s5_all90.png) | ![](./sim_permute_results/n_p100c100_s5_all90.png) | 
+Varied ST probabilities |
+10, 20, 30, 40, 50 | ![](./sim_permute_results/n_p100c60_s5_1020304050.png) | |
+
+
+```{r merge tables}
+# FIA
+
+p_FIA_1 = read.table("FIA_1.txt", sep="\t")
+p_FIA_2 = read.table("FIA_2.txt", sep="\t")
+p_FIA_3 = read.table("FIA_3.txt", sep="\t")
+
+p_FIA = rbind(p_FIA_1, p_FIA_2, p_FIA_3)
+
+# FIIK
+
+#p_FIIK_1 = read.table("FIIK_1.txt", sep="\t")
+#p_FIIK_2 = read.table("FIIK_2.txt", sep="\t")
+#p_FIIK_3 = read.table("FIIK_3.txt", sep="\t")
+
+#p_FIIK = rbind(p_FIIK_1, p_FIIK_2, p_FIIK_3)
+```
+
+```{r proportions}
+a <- hist(p_FIA$x, breaks = 100)
+b <- cumsum(a$counts)
+plot(a$mids, b, type='l')
+abline(a = 0, b = 1050, col="red")
+```
+
+
+#### Effect of sample number per patient
+
+Because regardless of how many samples collected of each ST, we only check for whether plasmid is ever present in that ST or not (OR between all samples). Sample number per patient has no effect here based on the algorithm chosen. Should sample number have effect than another method to quantify likelihood would need to be devised.
+ 
+ 
+##### Effect of prevalence of plasmid in population (coverage percentage)
+
+```{r varied coverage sim, include=FALSE, cache=TRUE}
+### s5m0
+
+genfixedSTdf(n_patients = 100, percent = 100, n_avgST = 5, missing= 0)
+f_p100c100_s5m0_plot <- plasmidSTpermute(f_p100c100_s5m0, permute_iter)
+png("./sim_permute_results/f_p100c100_s5m0.png")
+print(f_p100c100_s5m0_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 80, n_avgST = 5, missing= 0)
+f_p100c80_s5m0_plot <- plasmidSTpermute(f_p100c80_s5m0, permute_iter)
+png("./sim_permute_results/f_p100c80_s5m0.png")
+print(f_p100c80_s5m0_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 5, missing= 0)
+f_p100c60_s5m0_plot <- plasmidSTpermute(f_p100c60_s5m0, permute_iter)
+png("./sim_permute_results/f_p100c60_s5m0.png")
+print(f_p100c60_s5m0_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 40, n_avgST = 5, missing= 0)
+f_p100c40_s5m0_plot <- plasmidSTpermute(f_p100c40_s5m0, permute_iter)
+png("./sim_permute_results/f_p100c40_s5m0.png")
+print(f_p100c40_s5m0_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 20, n_avgST = 5, missing= 0)
+f_p100c20_s5m0_plot <- plasmidSTpermute(f_p100c20_s5m0, permute_iter)
+png("./sim_permute_results/f_p100c20_s5m0.png")
+print(f_p100c20_s5m0_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 0, n_avgST = 5, missing= 0)
+f_p100c0_s5m0_plot <- plasmidSTpermute(f_p100c0_s5m0, permute_iter)
+png("./sim_permute_results/f_p100c0_s5m0.png")
+print(f_p100c0_s5m0_plot)
+dev.off()
+
+### s5m1
+
+genfixedSTdf(n_patients = 100, percent = 100, n_avgST = 5, missing= 1)
+f_p100c100_s5m1_plot <- plasmidSTpermute(f_p100c100_s5m1, permute_iter)
+png("./sim_permute_results/f_p100c100_s5m1.png")
+print(f_p100c100_s5m1_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 80, n_avgST = 5, missing= 1)
+f_p100c80_s5m1_plot <- plasmidSTpermute(f_p100c80_s5m1, permute_iter)
+png("./sim_permute_results/f_p100c80_s5m1.png")
+print(f_p100c80_s5m1_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 5, missing= 1)
+f_p100c60_s5m1_plot <- plasmidSTpermute(f_p100c60_s5m1, permute_iter)
+png("./sim_permute_results/f_p100c60_s5m1.png")
+print(f_p100c60_s5m1_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 40, n_avgST = 5, missing= 1)
+f_p100c40_s5m1_plot <- plasmidSTpermute(f_p100c40_s5m1, permute_iter)
+png("./sim_permute_results/f_p100c40_s5m1.png")
+print(f_p100c40_s5m1_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 20, n_avgST = 5, missing= 1)
+f_p100c20_s5m1_plot <- plasmidSTpermute(f_p100c20_s5m1, permute_iter)
+png("./sim_permute_results/f_p100c20_s5m1.png")
+print(f_p100c20_s5m1_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 0, n_avgST = 5, missing= 1)
+f_p100c0_s5m1_plot <- plasmidSTpermute(f_p100c0_s5m1, permute_iter)
+png("./sim_permute_results/f_p100c0_s5m1.png")
+print(f_p100c0_s5m1_plot)
+dev.off()
+
+### s5m2
+
+genfixedSTdf(n_patients = 100, percent = 100, n_avgST = 5, missing= 2)
+f_p100c100_s5m2_plot <- plasmidSTpermute(f_p100c100_s5m2, permute_iter)
+png("./sim_permute_results/f_p100c100_s5m2.png")
+print(f_p100c100_s5m2_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 80, n_avgST = 5, missing= 2)
+f_p100c80_s5m2_plot <- plasmidSTpermute(f_p100c80_s5m2, permute_iter)
+png("./sim_permute_results/f_p100c80_s5m2.png")
+print(f_p100c80_s5m2_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 5, missing= 2)
+f_p100c60_s5m2_plot <- plasmidSTpermute(f_p100c60_s5m2, permute_iter)
+png("./sim_permute_results/f_p100c60_s5m2.png")
+print(f_p100c60_s5m2_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 40, n_avgST = 5, missing= 2)
+f_p100c40_s5m2_plot <- plasmidSTpermute(f_p100c40_s5m2, permute_iter)
+png("./sim_permute_results/f_p100c40_s5m2.png")
+print(f_p100c40_s5m2_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 20, n_avgST = 5, missing= 2)
+f_p100c20_s5m2_plot <- plasmidSTpermute(f_p100c20_s5m2, permute_iter)
+png("./sim_permute_results/f_p100c20_s5m2.png")
+print(f_p100c20_s5m2_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 0, n_avgST = 5, missing= 2)
+f_p100c0_s5m2_plot <- plasmidSTpermute(f_p100c0_s5m2, permute_iter)
+png("./sim_permute_results/f_p100c0_s5m2.png")
+print(f_p100c0_s5m2_plot)
+dev.off()
+
+### s5m3
+
+genfixedSTdf(n_patients = 100, percent = 100, n_avgST = 5, missing= 3)
+f_p100c100_s5m3_plot <- plasmidSTpermute(f_p100c100_s5m3, permute_iter)
+png("./sim_permute_results/f_p100c100_s5m3.png")
+print(f_p100c100_s5m3_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 80, n_avgST = 5, missing= 3)
+f_p100c80_s5m3_plot <- plasmidSTpermute(f_p100c80_s5m3, permute_iter)
+png("./sim_permute_results/f_p100c80_s5m3.png")
+print(f_p100c80_s5m3_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 5, missing= 3)
+f_p100c60_s5m3_plot <- plasmidSTpermute(f_p100c60_s5m3, permute_iter)
+png("./sim_permute_results/f_p100c60_s5m3.png")
+print(f_p100c60_s5m3_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 40, n_avgST = 5, missing= 3)
+f_p100c40_s5m3_plot <- plasmidSTpermute(f_p100c40_s5m3, permute_iter)
+png("./sim_permute_results/f_p100c40_s5m3.png")
+print(f_p100c40_s5m3_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 20, n_avgST = 5, missing= 3)
+f_p100c20_s5m3_plot <- plasmidSTpermute(f_p100c20_s5m3, permute_iter)
+png("./sim_permute_results/f_p100c20_s5m3.png")
+print(f_p100c20_s5m3_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 0, n_avgST = 5, missing= 3)
+f_p100c0_s5m3_plot <- plasmidSTpermute(f_p100c0_s5m3, permute_iter)
+png("./sim_permute_results/f_p100c0_s5m3.png")
+print(f_p100c0_s5m3_plot)
+dev.off()
+
+### s5m4
+
+genfixedSTdf(n_patients = 100, percent = 100, n_avgST = 5, missing= 4)
+f_p100c100_s5m4_plot <- plasmidSTpermute(f_p100c100_s5m4, permute_iter)
+png("./sim_permute_results/f_p100c100_s5m4.png")
+print(f_p100c100_s5m4_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 80, n_avgST = 5, missing= 4)
+f_p100c80_s5m4_plot <- plasmidSTpermute(f_p100c80_s5m4, permute_iter)
+png("./sim_permute_results/f_p100c80_s5m4.png")
+print(f_p100c80_s5m4_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 5, missing= 4)
+f_p100c60_s5m4_plot <- plasmidSTpermute(f_p100c60_s5m4, permute_iter)
+png("./sim_permute_results/f_p100c60_s5m4.png")
+print(f_p100c60_s5m4_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 40, n_avgST = 5, missing= 4)
+f_p100c40_s5m4_plot <- plasmidSTpermute(f_p100c40_s5m4, permute_iter)
+png("./sim_permute_results/f_p100c40_s5m4.png")
+print(f_p100c40_s5m4_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 20, n_avgST = 5, missing= 4)
+f_p100c20_s5m4_plot <- plasmidSTpermute(f_p100c20_s5m4, permute_iter)
+png("./sim_permute_results/f_p100c20_s5m4.png")
+print(f_p100c20_s5m4_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 0, n_avgST = 5, missing= 4)
+f_p100c0_s5m4_plot <- plasmidSTpermute(f_p100c0_s5m4, permute_iter)
+png("./sim_permute_results/f_p100c0_s5m4.png")
+print(f_p100c0_s5m4_plot)
+dev.off()
+
+```
+
+```{r print 3, include=FALSE}
+### s5m0
+
+png("./sim_permute_results/f_p100c100_s5m0.png")
+print(f_p100c100_s5m0_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c80_s5m0.png")
+print(f_p100c80_s5m0_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s5m0.png")
+print(f_p100c60_s5m0_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c40_s5m0.png")
+print(f_p100c40_s5m0_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c20_s5m0.png")
+print(f_p100c20_s5m0_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c0_s5m0.png")
+print(f_p100c0_s5m0_plot)
+dev.off()
+
+###s5m1
+
+png("./sim_permute_results/f_p100c100_s5m1.png")
+print(f_p100c100_s5m1_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c80_s5m1.png")
+print(f_p100c80_s5m1_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s5m1.png")
+print(f_p100c60_s5m1_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c40_s5m1.png")
+print(f_p100c40_s5m1_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c20_s5m1.png")
+print(f_p100c20_s5m1_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c0_s5m1.png")
+print(f_p100c0_s5m1_plot)
+dev.off()
+
+### s5m2
+
+png("./sim_permute_results/f_p100c100_s5m2.png")
+print(f_p100c100_s5m2_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c80_s5m2.png")
+print(f_p100c80_s5m2_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s5m2.png")
+print(f_p100c60_s5m2_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c40_s5m2.png")
+print(f_p100c40_s5m2_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c20_s5m2.png")
+print(f_p100c20_s5m2_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c0_s5m2.png")
+print(f_p100c0_s5m2_plot)
+dev.off()
+
+### s5m3
+
+png("./sim_permute_results/f_p100c100_s5m3.png")
+print(f_p100c100_s5m3_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c80_s5m3.png")
+print(f_p100c80_s5m3_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s5m3.png")
+print(f_p100c60_s5m3_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c40_s5m3.png")
+print(f_p100c40_s5m3_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c20_s5m3.png")
+print(f_p100c20_s5m3_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c0_s5m3.png")
+print(f_p100c0_s5m3_plot)
+dev.off()
+
+### s5m4
+
+png("./sim_permute_results/f_p100c100_s5m4.png")
+print(f_p100c100_s5m4_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c80_s5m4.png")
+print(f_p100c80_s5m4_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s5m4.png")
+print(f_p100c60_s5m4_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c40_s5m4.png")
+print(f_p100c40_s5m4_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c20_s5m4.png")
+print(f_p100c20_s5m4_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c0_s5m4.png")
+print(f_p100c0_s5m4_plot)
+dev.off()
+```
+
+Coverage percent is, from the entire sample population, how many patients (in percent) will have the plasmid. Where 100 percent would mean everyone has the plasmid, and 0 percent is where no one has the plasmid at all.
+ 
+We look at the effect of coverage at varied scenarios given a fixed number of average ST per patient. For example, suppose a patient was found to have 5 STs (or 5 STs on average), but only 3/5 of their STs had the plasmid we are looking for. This is compared to the case where a patient would have 5 STs again (fixed), but 1/5 of their STs has the plasmid in question. And 2/5, and so on.  
+ 
+Coverage percentage | 100 | 80 | 60 | 40 | 20 |
+---| -----|----|----|----|----|
+Num STs with plasmid/Average ST per patient |
+5/5 |![](./sim_permute_results/f_p100c100_s5m0.png) | ![](./sim_permute_results/f_p100c80_s5m0.png) | ![](./sim_permute_results/f_p100c60_s5m0.png) | ![](./sim_permute_results/f_p100c40_s5m0.png) | ![](./sim_permute_results/f_p100c20_s5m0.png) |
+4/5 |![](./sim_permute_results/f_p100c100_s5m1.png) | ![](./sim_permute_results/f_p100c80_s5m1.png) | ![](./sim_permute_results/f_p100c60_s5m1.png) | ![](./sim_permute_results/f_p100c40_s5m1.png) | ![](./sim_permute_results/f_p100c20_s5m1.png) |
+3/5 |![](./sim_permute_results/f_p100c100_s5m2.png) | ![](./sim_permute_results/f_p100c80_s5m2.png) | ![](./sim_permute_results/f_p100c60_s5m2.png) | ![](./sim_permute_results/f_p100c40_s5m2.png) | ![](./sim_permute_results/f_p100c20_s5m2.png) |
+2/5 |![](./sim_permute_results/f_p100c100_s5m3.png) | ![](./sim_permute_results/f_p100c80_s5m3.png) | ![](./sim_permute_results/f_p100c60_s5m3.png) | ![](./sim_permute_results/f_p100c40_s5m3.png) | ![](./sim_permute_results/f_p100c20_s5m3.png) |
+1/5 |![](./sim_permute_results/f_p100c100_s5m4.png) | ![](./sim_permute_results/f_p100c80_s5m4.png) | ![](./sim_permute_results/f_p100c60_s5m4.png) | ![](./sim_permute_results/f_p100c40_s5m4.png) | ![](./sim_permute_results/f_p100c20_s5m4.png) |  
+
+
+##### Effect of average number of STs per patient
+
+We consider the effect of different average number of STs at a fixed coverage of 60 (not too high, not too low). First, confirm from previous section that high ratios of ST with plasmid/ST will always return a positive on test.
+
+```{r varied ST per patient high ratio sim, include=FALSE, cache=TRUE}
+# 10
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 1)
+f_p100c60_s10m1_plot <- plasmidSTpermute(f_p100c60_s10m1, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m9.png")
+print(f_p100c60_s10m1_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 2)
+f_p100c60_s10m2_plot <- plasmidSTpermute(f_p100c60_s10m2, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m2.png")
+print(f_p100c60_s10m2_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 3)
+f_p100c60_s10m3_plot <- plasmidSTpermute(f_p100c60_s10m3, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m3.png")
+print(f_p100c60_s10m3_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 4)
+f_p100c60_s10m4_plot <- plasmidSTpermute(f_p100c60_s10m4, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m4.png")
+print(f_p100c60_s10m4_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 5)
+f_p100c60_s10m5_plot <- plasmidSTpermute(f_p100c60_s10m5, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m5.png")
+print(f_p100c60_s10m5_plot)
+dev.off()
+
+# 50
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 1)
+f_p100c60_s50m1_plot <- plasmidSTpermute(f_p100c60_s50m1, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m1.png")
+print(f_p100c60_s50m1_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 2)
+f_p100c60_s50m2_plot <- plasmidSTpermute(f_p100c60_s50m2, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m2.png")
+print(f_p100c60_s50m2_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 10)
+f_p100c60_s50m10_plot <- plasmidSTpermute(f_p100c60_s50m10, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m10.png")
+print(f_p100c60_s50m10_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 20)
+f_p100c60_s50m20_plot <- plasmidSTpermute(f_p100c60_s50m20, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m20.png")
+print(f_p100c60_s50m20_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 25)
+f_p100c60_s50m25_plot <- plasmidSTpermute(f_p100c60_s50m25, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m25.png")
+print(f_p100c60_s50m25_plot)
+dev.off()
+
+```
+
+```{r print 4, include=FALSE}
+# 10
+
+png("./sim_permute_results/f_p100c60_s10m1.png")
+print(f_p100c60_s10m1_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s10m2.png")
+print(f_p100c60_s10m2_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s10m3.png")
+print(f_p100c60_s10m3_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s10m4.png")
+print(f_p100c60_s10m4_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s10m5.png")
+print(f_p100c60_s10m5_plot)
+dev.off()
+
+# 50
+
+png("./sim_permute_results/f_p100c60_s50m1.png")
+print(f_p100c60_s50m1_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m2.png")
+print(f_p100c60_s50m2_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m10.png")
+print(f_p100c60_s50m10_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m20.png")
+print(f_p100c60_s50m20_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m25.png")
+print(f_p100c60_s50m25_plot)
+dev.off()
+```
+
+Average number of ST | 5 | 10 | 50 |
+---------------------|---|----|----|
+Ratios |
+n/n-1 | ![5/4](./sim_permute_results/f_p100c60_s5m1.png) | ![10/9](./sim_permute_results/f_p100c60_s10m1.png) | ![50/49](./sim_permute_results/f_p100c60_s50m1.png) | 
+n/n-2 | ![5/3](./sim_permute_results/f_p100c60_s5m2.png) | ![10/8](./sim_permute_results/f_p100c60_s10m2.png) | ![50/48](./sim_permute_results/f_p100c60_s50m2.png) |
+Ratios |
+5/4 | ![5/4](./sim_permute_results/f_p100c60_s5m1.png) | ![10/8](./sim_permute_results/f_p100c60_s10m2.png) | ![50/40](./sim_permute_results/f_p100c60_s50m10.png) |
+5/3 | ![5/3](./sim_permute_results/f_p100c60_s5m2.png) | ![10/6](./sim_permute_results/f_p100c60_s10m4.png) | ![50/30](./sim_permute_results/f_p100c60_s50m20.png) |
+
+Next, consider ratios (of ST) that are lower than half because we confirmed that at high ratios test will return a highly confident positive. 
+
+```{r varied ST per patient low ratio sim, include=FALSE, cache=TRUE}
+# 10
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 6)
+f_p100c60_s10m6_plot <- plasmidSTpermute(f_p100c60_s10m6, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m6.png")
+print(f_p100c60_s10m6_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 7)
+f_p100c60_s10m7_plot <- plasmidSTpermute(f_p100c60_s10m7, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m7.png")
+print(f_p100c60_s10m7_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 8)
+f_p100c60_s10m8_plot <- plasmidSTpermute(f_p100c60_s10m8, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m8.png")
+print(f_p100c60_s10m8_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 10, missing= 9)
+f_p100c60_s10m9_plot <- plasmidSTpermute(f_p100c60_s10m9, permute_iter)
+png("./sim_permute_results/f_p100c60_s10m9.png")
+print(f_p100c60_s10m9_plot)
+dev.off()
+
+# 50
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 40)
+f_p100c60_s50m40_plot <- plasmidSTpermute(f_p100c60_s50m40, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m40.png")
+print(f_p100c60_s50m40_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 45)
+f_p100c60_s50m45_plot <- plasmidSTpermute(f_p100c60_s50m45, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m45.png")
+print(f_p100c60_s50m45_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 47)
+f_p100c60_s50m47_plot <- plasmidSTpermute(f_p100c60_s50m47, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m47.png")
+print(f_p100c60_s50m47_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 48)
+f_p100c60_s50m48_plot <- plasmidSTpermute(f_p100c60_s50m48, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m48.png")
+print(f_p100c60_s50m48_plot)
+dev.off()
+
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 49)
+f_p100c60_s50m49_plot <- plasmidSTpermute(f_p100c60_s50m49, permute_iter)
+png("./sim_permute_results/f_p100c60_s50m49.png")
+print(f_p100c60_s50m49_plot)
+dev.off()
+```
+
+```{r varied ST per patient low ratio sim 2, include=FALSE, cache=TRUE}
+genfixedSTdf(n_patients = 100, percent = 60, n_avgST = 50, missing= 30)
+f_p100c60_s50m30_plot <- plasmidSTpermute(f_p100c60_s50m30, permute_iter)
+```
+
+```{r print 5 ,include=FALSE}
+# 10
+png("./sim_permute_results/f_p100c60_s10m6.png")
+print(f_p100c60_s10m6_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s10m7.png")
+print(f_p100c60_s10m7_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s10m8.png")
+print(f_p100c60_s10m8_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s10m9.png")
+print(f_p100c60_s10m9_plot)
+dev.off()
+
+# 50
+
+png("./sim_permute_results/f_p100c60_s50m30.png")
+print(f_p100c60_s50m30_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m40.png")
+print(f_p100c60_s50m40_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m45.png")
+print(f_p100c60_s50m45_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m47.png")
+print(f_p100c60_s50m47_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m48.png")
+print(f_p100c60_s50m48_plot)
+dev.off()
+
+png("./sim_permute_results/f_p100c60_s50m49.png")
+print(f_p100c60_s50m49_plot)
+dev.off()
+```
+
+Average number of ST | 5 | 10 | 50 |
+---------------------|---|----|----|
+Ratios |
+n/1 | ![5/1](./sim_permute_results/f_p100c60_s5m4.png) | ![10/1](./sim_permute_results/f_p100c60_s10m9.png) | ![50/1](./sim_permute_results/f_p100c60_s50m49.png) |
+n/2 | ![5/2](./sim_permute_results/f_p100c60_s5m3.png) | ![10/2](./sim_permute_results/f_p100c60_s10m8.png) | ![50/2](./sim_permute_results/f_p100c60_s50m48.png) |
+n/3 | ![5/3](./sim_permute_results/f_p100c60_s5m2.png) | ![10/3](./sim_permute_results/f_p100c60_s10m7.png) | ![50/3](./sim_permute_results/f_p100c60_s50m47.png) |
+Ratios |
+5/1 | ![5/1](./sim_permute_results/f_p100c60_s5m4.png) | ![10/2](./sim_permute_results/f_p100c60_s10m8.png) | ![50/10](./sim_permute_results/f_p100c60_s50m40.png) |
+5/2 | ![5/2](./sim_permute_results/f_p100c60_s5m3.png) | ![10/4](./sim_permute_results/f_p100c60_s10m6.png) | ![50/20](./sim_permute_results/f_p100c60_s50m30.png) |
