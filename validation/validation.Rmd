@@ -7,7 +7,7 @@ output: html_document
 ### Start analysis, load dependencies and functions
 
 ```{r dependencies, message=FALSE}
-#setwd('~/Plasmid_ST_Permutation_Test/validation')
+setwd('~/Desktop/Cambodia_Neonatal/Plasmid_ST_Permutation_Test/validation')
 
 library(plyr)
 library(dplyr)
@@ -48,18 +48,24 @@ p_FIA = rbind(p_FIA_1, p_FIA_2, p_FIA_3)
 ```
 
 ```{r proportions, include=FALSE}
+
+png("./p_distribution.png")
+hist(p_FIA$x, breaks = 100, main = "p-value distibution of FIA plasmid", xlab = "p-value")
+dev.off()
+
 a <- hist(p_FIA$x, breaks = 100)
 b <- cumsum(a$counts)
+
 png("./proportion.png")
 par(pty="s")
-plot(a$mids, b, type='l')
+plot(a$mids, b, type='l', xlab = "p-value", ylab = "accumulated frequency")
 abline(a = 0, b = 1050, col="red")
 dev.off()
 ```
 
-![Raw p-value distribution]()
+![Raw p-value distribution](p_distribution.png)
 
-![](./proportion.png)
+![](proportion.png)
 
 #### Effect of sample number per patient
 
