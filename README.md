@@ -1,5 +1,6 @@
 ### Index of Contents
 
+* [Paper](#paper) - link to publication
 * [Dependencies](#dependencies) - r packages required and versioning
 * [Method](#method) - algorithm used to perform this permutation test in diagrams
 * [Data Structure](#data_structure) - data structure expected to use the functions given for this test
@@ -11,6 +12,10 @@
 <a name ="dependencies"></a>
 
 ---------
+
+### Publication
+
+Smit, Pieter W., et al. "Transmission dynamics of hyper-endemic multi-drug resistant Klebsiella pneumoniae in a Southeast Asian neonatal unit: a longitudinal study with whole genome sequencing." Frontiers in microbiology 9 (2018): 1197. <https://www.frontiersin.org/articles/10.3389/fmicb.2018.01197/full>
 
 ### Dependencies 
 
